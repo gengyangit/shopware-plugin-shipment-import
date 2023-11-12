@@ -41,8 +41,8 @@ class ShipmentQueueWriter implements ShipmentQueueWriterInterface
         return $this->shipmentQueueRepository->create([
             [
                 'id' =>  Uuid::randomHex(),
-                'order_number' => $data['order_number'],
-                'extern_order_number' => $data['extern_order_number'],
+                'orderNumber' => $data['order_number'],
+                'externOrderNumber' => $data['extern_order_number'],
                 'data' => $data['data'],
                 'status' => static::STATUS_PENDING,
             ]
