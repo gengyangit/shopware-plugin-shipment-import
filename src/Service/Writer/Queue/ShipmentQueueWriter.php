@@ -6,6 +6,7 @@ use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Event\EntityWrittenContainerEvent;
 use Shopware\Core\Framework\Uuid\Uuid;
+use Yanduu\ShipmentImport\Service\Manager\OrderManagerInterface;
 
 class ShipmentQueueWriter implements ShipmentQueueWriterInterface
 {
@@ -24,8 +25,9 @@ class ShipmentQueueWriter implements ShipmentQueueWriterInterface
      * 
      * @param \Shopware\Core\Framework\DataAbstractionLayer\EntityRepository $shipmentQueueRepository     
      */
-    public function __construct(EntityRepository $shipmentQueueRepository) 
-    {
+    public function __construct(
+        EntityRepository $shipmentQueueRepository
+    ) {
         $this->shipmentQueueRepository = $shipmentQueueRepository;
 
         $this->context = Context::createDefaultContext();

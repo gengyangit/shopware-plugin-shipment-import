@@ -7,6 +7,9 @@
             <argument type="service" id="yanduu_shipment_queue.repository"/>
         </service>
 
+        <service id="Yanduu\ShipmentImport\Service\Writer\Order\OrderDeliveryWriter">
+             <argument type="service" id="order_delivery.repository"/>
+        </service>
     </services>
 
 </container>

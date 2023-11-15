@@ -1,0 +1,15 @@
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service id="Yanduu\ShipmentImport\Service\Manager\OrderManager">
+            <argument type="service" id="Yanduu\ShipmentImport\Service\Reader\Order\OrderReader"/>
+            <argument type="service" id="Yanduu\ShipmentImport\Service\Reader\Order\OrderDeliveryReader"/>
+            <argument type="service" id="Yanduu\ShipmentImport\Service\Reader\StateMachine\StateMachineStateReader"/>
+            <argument type="service" id="Yanduu\ShipmentImport\Service\Writer\Order\OrderDeliveryWriter"/>
+        </service>
+
+    </services>
+
+</container>

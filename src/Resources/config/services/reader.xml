@@ -8,6 +8,18 @@
             <argument type="service" id="yanduu_shipment_queue.repository"/>
         </service> 
 
+        <service id="Yanduu\ShipmentImport\Service\Reader\Order\OrderReader">
+            <argument type="service" id="order.repository"/>
+        </service> 
+
+        <service id="Yanduu\ShipmentImport\Service\Reader\Order\OrderDeliveryReader">
+            <argument type="service" id="order_delivery.repository"/>
+        </service> 
+
+        <service id="Yanduu\ShipmentImport\Service\Reader\StateMachine\StateMachineStateReader">
+            <argument type="service" id="state_machine_state.repository"/>
+        </service> 
+
     </services>
 
 </container>
