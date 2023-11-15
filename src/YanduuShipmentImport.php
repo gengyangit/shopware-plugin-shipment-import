@@ -12,11 +12,21 @@ use Shopware\Core\Framework\Plugin;
 
 class YanduuShipmentImport extends Plugin
 {
+    /**
+     * @var \Shopware\Core\Framework\Plugin\Context\InstallContext $context
+     * 
+     * @return void
+     */
     public function install(InstallContext $context):void
     {
         parent::install($context);
     }
 
+    /**
+     * @var \Shopware\Core\Framework\Plugin\Context\UninstallContext $context
+     * 
+     * @return void
+     */
     public function uninstall(UninstallContext $context):void
     {
         if ($context->keepUserData()) {

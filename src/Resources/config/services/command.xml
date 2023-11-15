@@ -7,6 +7,7 @@
         <service id="Yanduu\ShipmentImport\Command\ProcessShipmentsCommand">
             <argument type="service" id="Yanduu\ShipmentImport\Service\Manager\OrderManager"/>
             <argument type="service" id="Yanduu\ShipmentImport\Service\Reader\Queue\ShipmentQueueReader"/>
+            <argument type="service" id="Yanduu\ShipmentImport\Service\Writer\Queue\ShipmentQueueWriter"/>
             <tag name="console.command"/>
         </service>
         

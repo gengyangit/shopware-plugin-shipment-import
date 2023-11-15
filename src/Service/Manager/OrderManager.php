@@ -57,11 +57,12 @@ class OrderManager implements OrderManagerInterface
     /**
      * @param array<string, mixed> $data
      * 
-     * @return void
+     * @return string
      */
-    public function updateState(ShipmentQueueEntity $shipmentEntity): void
+    public function updateState(ShipmentQueueEntity $shipmentEntity): string
     {   
         $data = $shipmentEntity->getData();
+
         $shipment = $this->getShipment($data['line_items']);
         $state = $this->stateMachineStateReader->getEntityByTechnicalName($shipment['state']);
         $order = $this->orderReader->getEntityByOrderNUmber($shipmentEntity->getOrderNumber());
@@ -74,41 +75,48 @@ class OrderManager implements OrderManagerInterface
         ];
 
         $this->orderDeliveryWriter->update($orderDeliveryData);
+
+        return $shipment['state'];
     }
 
     /**
-     * @return
+     * @return array<string, mixed>
      */
     protected function getShipment(array $lineItems): array 
     {
         $trackingCodes = [];
         $deliveryState = OrderDeliveryStates::STATE_OPEN;
+        $quantityOrdered = 0;
+        $quantityShipped = 0;
 
         foreach ($lineItems as $lineItem) {
+            $quantityOrdered = $quantityOrdered + $lineItem['quantity_ordered'];
 
-            if ($lineItem['quantity_shipped'] === 0) {
-                continue;
-            }
-
-            if ($lineItem['quantity_shipped'] !== $lineItem['quantity_ordered']) {
-                $deliveryState = OrderDeliveryStates::STATE_PARTIALLY_SHIPPED;
-            }
-
-            if ($lineItem['quantity_shipped'] === $lineItem['quantity_ordered']
-                && $deliveryState === OrderDeliveryStates::STATE_OPEN
-            ) {
-                $deliveryState = OrderDeliveryStates::STATE_SHIPPED;
+            if ($lineItem['quantity_shipped']) {
+                $quantityShipped = $quantityShipped + $lineItem['quantity_shipped'];
             }
 
             if (!array_key_exists('shipments', $lineItem)
-                || !isset($lineItem['shipments'])
+                || empty($lineItem['shipments'])
             ) {
                 continue;
             }
 
-            if (!in_array($lineItem['shipments']['tracking_number'], $trackingCodes)) {
-                array_push($trackingCodes, $lineItem['shipments']['tracking_number']);
+            if (!in_array($lineItem['shipments']['tracking_code'], $trackingCodes)) {
+                array_push($trackingCodes, $lineItem['shipments']['tracking_code']);
             }
+        }
+
+        if ($quantityShipped > 0
+            && $quantityShipped < $quantityOrdered 
+        ) {
+            $deliveryState = OrderDeliveryStates::STATE_PARTIALLY_SHIPPED;
+        }
+
+        if ($quantityShipped > 0
+            && $quantityShipped === $quantityOrdered 
+        ) {
+            $deliveryState = OrderDeliveryStates::STATE_SHIPPED;
         }
 
         return [

@@ -18,7 +18,7 @@ class ShipmentQueueWriter implements ShipmentQueueWriterInterface
     /**
      * @var \Shopware\Core\Framework\DataAbstractionLayer\EntityRepository $shipmentQueueRepository
      */
-    protected $shipmentQueueRepository;
+    protected EntityRepository $shipmentQueueRepository;
 
     /**
      * Constructor 

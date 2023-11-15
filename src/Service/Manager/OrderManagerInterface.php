@@ -7,7 +7,9 @@ use Yanduu\ShipmentImport\Core\Content\ShipmentQueue\ShipmentQueueEntity;
 interface OrderManagerInterface
 {
     /**
-     * @return void
+     * @param ShipmentQueueEntity $shipmentEntity
+     * 
+     * @return string
      */
-    public function updateState(ShipmentQueueEntity $shipmentEntity): void;
+    public function updateState(ShipmentQueueEntity $shipmentEntity): string;
 }

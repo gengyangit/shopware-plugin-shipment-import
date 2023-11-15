@@ -2,6 +2,7 @@
 
 namespace Yanduu\ShipmentImport\Command;
 
+use Shopware\Core\Checkout\Order\Aggregate\OrderDelivery\OrderDeliveryStates;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsAnyFilter;
@@ -15,6 +16,7 @@ use Yanduu\ShipmentImport\Core\Content\ShipmentQueue\ShipmentQueueCollection;
 use Yanduu\ShipmentImport\Core\Content\ShipmentQueue\ShipmentQueueEntity;
 use Yanduu\ShipmentImport\Service\Manager\OrderManagerInterface;
 use Yanduu\ShipmentImport\Service\Reader\Queue\ShipmentQueueReaderInterface;
+use Yanduu\ShipmentImport\Service\Writer\Queue\ShipmentQueueWriterInterface;
 
 class ProcessShipmentsCommand extends Command
 {
@@ -46,27 +48,33 @@ class ProcessShipmentsCommand extends Command
     /**
      * @var \Yanduu\ShipmentImport\Service\Manager\OrderManagerInterface
      */
-    protected $orderManager;
+    protected OrderManagerInterface $orderManager;
 
     /**
      * @var \Yanduu\ShipmentImport\Service\Reader\Queue\ShipmentQueueReaderInterface
      */
-    protected $shipmentQueueReader;
+    protected ShipmentQueueReaderInterface $shipmentQueueReader;
 
+    /**
+     * @var \Yanduu\ShipmentImport\Service\Writer\Queue\ShipmentQueueWriterInterface
+     */
+    protected ShipmentQueueWriterInterface $shipmentQueueWriter;
 
     /**
      * Constructor 
      * 
      * @param \Yanduu\ShipmentImport\Service\Manager\OrderManagerInterface $orderManager
-     * @param \Yarnstore\OrderExport\Service\Logger\LoggerInterface $logger
+     * @param \Yanduu\ShipmentImport\Service\Reader\Queue\ShipmentQueueReaderInterface $shipmentQueueReader
+     * @param \Yanduu\ShipmentImport\Service\Writer\Queue\ShipmentQueueWriterInterface $shipmentQueueWriter
      */
     public function __construct(
         OrderManagerInterface $orderManager,
         ShipmentQueueReaderInterface $shipmentQueueReader,
-        //LoggerInterface $logger,
+        ShipmentQueueWriterInterface $shipmentQueueWriter,
     ) {
         $this->orderManager = $orderManager;
         $this->shipmentQueueReader = $shipmentQueueReader;
+        $this->shipmentQueueWriter = $shipmentQueueWriter;
 
         parent::__construct();
     }
@@ -99,7 +107,16 @@ class ProcessShipmentsCommand extends Command
         
         /** @var \Yanduu\ShipmentImport\Core\Content\ShipmentQueue\ShipmentQueueEntity $shipmentEntity */
         foreach ($shipmentCollection as $shipmentEntity) {
-            $this->updateShipmentState($shipmentEntity);
+            $state = $this->updateShipmentState($shipmentEntity);
+
+            if ($state === OrderDeliveryStates::STATE_SHIPPED) {
+                $this->shipmentQueueWriter->update(
+                    [
+                        'id' => $shipmentEntity->getId(),
+                        'status' => static::STATUS_PROCESSED
+                    ]
+                );
+            }
         }
 
         return static::SUCCESS_STATUS_CODE;
@@ -117,24 +134,26 @@ class ProcessShipmentsCommand extends Command
     }
 
     /**
+     * @param \Yanduu\ShipmentImport\Core\Content\ShipmentQueue\ShipmentQueueEntity $shipmentEntity
      * 
+     * @return string|null
      */
-    protected function updateShipmentState(ShipmentQueueEntity $shipmentEntity) 
+    protected function updateShipmentState(ShipmentQueueEntity $shipmentEntity): ?string 
     {
         $data = $shipmentEntity->getData();
 
         if (!$data) {
-            return;
+            return null;
         }
 
         if (!array_key_exists('line_items', $data)
             || !isset($data['line_items'])
         ) {
-            return;
+            return null;
         }
 
 
-        $this->orderManager->updateState($shipmentEntity);
+        return $this->orderManager->updateState($shipmentEntity);
     }
     
 }
