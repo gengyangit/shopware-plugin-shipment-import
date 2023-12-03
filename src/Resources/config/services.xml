@@ -6,8 +6,10 @@
 
      <imports>
         <import resource="./services/command.xml"/>
+        <import resource="./services/config.xml"/>
         <import resource="./services/entity.xml"/>
         <import resource="./services/logger.xml"/>
+        <import resource="./services/mail.xml"/>
         <import resource="./services/manager.xml"/>
         <import resource="./services/reader.xml"/>
         <import resource="./services/writer.xml"/>

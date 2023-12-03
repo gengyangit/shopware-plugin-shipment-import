@@ -9,6 +9,5 @@ interface OrderDeliveryReaderInterface
     /**
      * @param string $orderId
      */
-    public function getEntityByOrderId(string $orderId);
-
+    public function getEntitiesByOrderId(string $orderId);
 }

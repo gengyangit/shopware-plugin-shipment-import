@@ -38,7 +38,7 @@ class OrderDeliveryReader implements OrderDeliveryReaderInterface
      * 
      * @return 
      */
-    public function getEntityByOrderId(string $orderId) 
+    public function getEntitiesByOrderId(string $orderId) 
     {
         $collection = [];
         $criteria = new Criteria();
@@ -53,7 +53,7 @@ class OrderDeliveryReader implements OrderDeliveryReaderInterface
             return null;
         }
         
-        return $entities->first();
+        return $entities;
     }
 
 }

@@ -8,6 +8,8 @@
             <argument type="service" id="Yanduu\ShipmentImport\Service\Reader\Order\OrderDeliveryReader"/>
             <argument type="service" id="Yanduu\ShipmentImport\Service\Reader\StateMachine\StateMachineStateReader"/>
             <argument type="service" id="Yanduu\ShipmentImport\Service\Writer\Order\OrderDeliveryWriter"/>
+            <argument type="service" id="Yanduu\ShipmentImport\Service\Mail\MailService"/>
+            <argument type="service" id="Yanduu\ShipmentImport\Service\Config\SystemConfig"/>
         </service>
 
     </services>

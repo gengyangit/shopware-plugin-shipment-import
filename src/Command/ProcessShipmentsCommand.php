@@ -109,6 +109,15 @@ class ProcessShipmentsCommand extends Command
         foreach ($shipmentCollection as $shipmentEntity) {
             $state = $this->updateShipmentState($shipmentEntity);
 
+            if ($state === OrderDeliveryStates::STATE_PARTIALLY_SHIPPED) {
+                $this->shipmentQueueWriter->update(
+                    [
+                        'id' => $shipmentEntity->getId(),
+                        'status' => static::STATUS_PROCESSING
+                    ]
+                );
+            }
+
             if ($state === OrderDeliveryStates::STATE_SHIPPED) {
                 $this->shipmentQueueWriter->update(
                     [

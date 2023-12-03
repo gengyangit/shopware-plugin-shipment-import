@@ -12,5 +12,4 @@ interface OrderDeliveryWriterInterface
      * @return Shopware\Core\Framework\DataAbstractionLayer\Event\EntityWrittenContainerEvent
      */
     public function update(array $data): EntityWrittenContainerEvent;
-
 }

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/shopware/platform/master/src/Core/System/SystemConfig/Schema/config.xsd">
+
+    <card>
+        <title>Email</title>
+        <title lang="de-DE">Email</title>
+
+        <input-field>
+            <name>partiallyShippedEmailTemplateId</name>
+            <label>Partially shipped Email Template Id</label>
+            <label lang="de-DE">E-Mail Template Id für Ware teilweise versendet</label>
+        </input-field>
+
+        <input-field>
+            <name>shippedEmailTemplateId</name>
+            <label>Shipped Email Template Id</label>
+            <label lang="de-DE">E-Mail Template Id für Ware versendet </label>
+        </input-field>
+
+    </card>
+    
+</config>
