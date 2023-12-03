@@ -24,7 +24,7 @@ class Logger implements LoggerInterface
      */
     protected function initLogger(): void 
     {
-        $path = '/var/www/vhosts/yarnstore.de/staging.yarnstore.de/var/log/yanduu_shipment_import-' . date('Y-m-d', time()). '.log';
+        $path = getcwd() . '/var/log/yanduu_shipment_import-' . date('Y-m-d', time()). '.log';
 
         $this->logger = new MonologLogger(static::MONOLOGGER_CHANNEL_NAME);        
         $this->logger->pushHandler(new MonologStreamHandler($path, MonologLogger::DEBUG));
